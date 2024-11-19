@@ -1,5 +1,12 @@
 # คู่มือการใช้งานแอป
 
+## Live Preview Link [Demo](tic-tac-toe-hdamhdbfamagbvcy.southeastasia-01.azurewebsites.net)
+
+
+![Login](./docs/oauth-login.jpg)
+![Game](./docs/game-page.jpg)
+![Score](./docs/score-page.jpg)
+
 ### 1. การติดตั้งและการตั้งค่า
 
 #### 1.1 การติดตั้ง Dependencies
