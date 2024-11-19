@@ -20,11 +20,11 @@ const Board = () => {
     setIsXNext(!isXNext)
   }
 
-  const aiMove = (newBoard) => findBestMove(newBoard)
-  const randomMove = (newBoard) => {
+  const aiMove = (newBoard: (string | null)[]) => findBestMove(newBoard)
+  const randomMove = (newBoard: (string | null)[]): number => {
     const emptyIndices = newBoard
       .map((value, index) => (value === null ? index : null))
-      .filter((value) => value !== null)
+      .filter((value): value is number => value !== null)
     return emptyIndices[Math.floor(Math.random() * emptyIndices.length)]
   }
 
