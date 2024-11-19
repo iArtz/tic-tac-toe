@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import mongoose from 'mongoose'
 import Score from '@/models/Score'
-
-const connectDB = async () => {
-  if (mongoose.connections[0].readyState) return
-  await mongoose.connect(process.env.MONGODB_URI!)
-}
+import { connectDB } from '@/lib/mongoose'
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,8 +11,6 @@ export async function POST(req: NextRequest) {
       score,
       winStreak,
     } = await req.json()
-
-    console.log(name)
 
     let existingUser = await Score.findOne({ userId: sid })
     if (!existingUser) {
