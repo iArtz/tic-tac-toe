@@ -1,5 +1,4 @@
 'use client'
-import Nav from '../components/Nav'
 import Board from '../components/Board'
 import { useUser } from '@auth0/nextjs-auth0/client'
 
