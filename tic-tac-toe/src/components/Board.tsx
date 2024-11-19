@@ -10,6 +10,7 @@ const Board = () => {
   const [winStreak, setWinStreak] = useState(0)
   const [isAI, setIsAI] = useState(true)
   const { user, isLoading, error } = useUser()
+  const [loading, setLoading] = useState(true)
 
   const handleClick = (index: number) => {
     if (board[index] || calculateWinner(board) || isBoardFull(board)) return
@@ -143,6 +144,10 @@ const Board = () => {
     setBoard(Array(9).fill(null))
     setIsXNext(true)
     setShowModal(false)
+    saveHandler()
+  }
+
+  const updateScore = () => {
     switch (winner) {
       case 'X':
         if (winStreak != 0 && winStreak % 3 === 0) {
@@ -173,12 +178,34 @@ const Board = () => {
 
   useEffect(() => {
     if ((isFull && !winner) || winner) {
+      updateScore()
       setShowModal(true)
     }
-    saveHandler()
   }, [isFull, winner])
 
-  if (isLoading) {
+  useEffect(() => {
+    const fetchScore = async () => {
+      if (user) {
+        try {
+          const response = await fetch(`/api/scores/${user.sid}`)
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          const data = await response.json()
+          setScore(data.score)
+          setWinStreak(data.winStreak)
+        } catch (error) {
+          console.error('Error fetching score from database:', error)
+        } finally {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchScore()
+  }, [])
+
+  if (loading || isLoading) {
     return <div>Loading...</div>
   }
 
