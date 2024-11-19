@@ -1,4 +1,5 @@
 'use client'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import { useEffect, useState } from 'react'
 
 const Board = () => {
@@ -6,8 +7,9 @@ const Board = () => {
   const [isXNext, setIsXNext] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [score, setScore] = useState(0)
-  const [winSteak, setWinSteak] = useState(0)
+  const [winStreak, setWinStreak] = useState(0)
   const [isAI, setIsAI] = useState(true)
+  const { user, isLoading, error } = useUser()
 
   const handleClick = (index: number) => {
     if (board[index] || calculateWinner(board) || isBoardFull(board)) return
@@ -120,18 +122,35 @@ const Board = () => {
   const isBoardFull = (squares: (string | null)[]) =>
     squares.every((square) => square !== null)
 
+  const saveHandler = async () => {
+    try {
+      const response = await fetch('/api/score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user, score, winStreak }),
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+    } catch (error) {
+      console.error('Error saving score to database:', error)
+    }
+  }
+
   const restartGame = () => {
     setBoard(Array(9).fill(null))
     setIsXNext(true)
     setShowModal(false)
     switch (winner) {
       case 'X':
-        if (winSteak > 0 && winSteak % 3 === 0) {
+        if (winStreak != 0 && winStreak % 3 === 0) {
           setScore((prev) => prev + 1)
-          setWinSteak(0)
+          setWinStreak(0)
         }
         setScore((prev) => prev + 1)
-        setWinSteak((prev) => prev + 1)
+        setWinStreak((prev) => prev + 1)
         break
       case 'O':
         setScore((prev) => {
@@ -140,7 +159,7 @@ const Board = () => {
           }
           return prev - 1
         })
-        setWinSteak(0)
+        setWinStreak(0)
     }
   }
 
@@ -156,12 +175,21 @@ const Board = () => {
     if ((isFull && !winner) || winner) {
       setShowModal(true)
     }
+    saveHandler()
   }, [isFull, winner])
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error</div>
+  }
 
   return (
     <>
       <div className="pb-6 text-4xl">Player score {score}</div>
-      <div className="pb-6 text-3xl">Winning streak {winSteak}</div>
+      <div className="pb-6 text-3xl">Winning streak {winStreak}</div>
       <div className="pb-6 text-2xl">{status}</div>
       <div className="grid grid-cols-3 gap-2" id="board">
         {board.map((value, index) => (
