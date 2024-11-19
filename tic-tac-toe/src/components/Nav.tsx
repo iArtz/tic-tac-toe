@@ -1,8 +1,10 @@
+'use client'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import Image from 'next/image'
 import Login from './Login'
 import Logout from './Logout'
 import favicon from '../app/favicon.ico'
+import Link from 'next/link'
 
 const Nav = () => {
   const { user, error, isLoading } = useUser()
@@ -14,16 +16,19 @@ const Nav = () => {
       {user ? (
         <>
           <div className="flex items-center">
-            <Image
-              src={user.picture || 'https://via.placeholder.com/50'}
-              alt={user.name || 'User Picture'}
-              width={50}
-              height={50}
-              className="rounded-full"
-              unoptimized
-            />
+            <Link href="/">
+              <Image
+                src={user.picture || 'https://via.placeholder.com/50'}
+                alt={user.name || 'User Picture'}
+                width={50}
+                height={50}
+                className="rounded-full"
+                unoptimized
+              />
+            </Link>
             <p className="ml-4">Welcome, {user.name}!</p>
           </div>
+          <Link href="/scores">Scoreboard</Link>
           <Logout />
         </>
       ) : (

@@ -124,7 +124,7 @@ const Board = () => {
 
   const saveHandler = async () => {
     try {
-      const response = await fetch('/api/score', {
+      const response = await fetch('/api/scores', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

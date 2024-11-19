@@ -7,7 +7,6 @@ export default function Home() {
   const { user } = useUser()
   return (
     <>
-      <Nav />
       {user ? (
         <>
           <h1 className="text-center text-4xl font-bold py-14">Tic-Tac-Toe</h1>
