@@ -19,3 +19,12 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+#board {
+  background: var(--foreground);
+}
+
+button {
+  color: var(--background);
+  background: var(--background);
+}
